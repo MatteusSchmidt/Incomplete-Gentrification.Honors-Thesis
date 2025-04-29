@@ -1,0 +1,41 @@
+-------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/schmidt/Desktop/Research/Analysis/output/log_Centroid_cleaning.log
+  log type:  text
+ opened on:  29 Apr 2025, 00:59:56
+
+. 
+. import delimited using "./raw/County centroid/CenPop2010.txt", clear stringcols(1 2)
+(encoding automatically selected: ISO-8859-9)
+(7 vars, 3,221 obs)
+
+. gen FIPS = statefp + countyfp
+
+. drop couname stname statefp countyfp
+
+. save ./Analysis/data/Centroid_2010, replace
+file ./Analysis/data/Centroid_2010.dta saved
+
+. 
+. import delimited using "./raw/County centroid/CenPop2020.txt", clear stringcols(1 2)
+(encoding automatically selected: UTF-8)
+(7 vars, 3,221 obs)
+
+. gen FIPS = statefp + countyfp
+
+. drop couname stname statefp countyfp
+
+. save ./Analysis/data/Centroid_2020, replace
+file ./Analysis/data/Centroid_2020.dta saved
+
+. 
+. cd ./Analysis
+/Users/schmidt/Desktop/Research/Analysis
+
+. 
+. log close
+      name:  <unnamed>
+       log:  /Users/schmidt/Desktop/Research/Analysis/output/log_Centroid_cleaning.log
+  log type:  text
+ closed on:  29 Apr 2025, 00:59:56
+-------------------------------------------------------------------------------------------

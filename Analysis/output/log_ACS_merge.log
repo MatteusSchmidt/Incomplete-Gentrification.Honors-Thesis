@@ -1,0 +1,156 @@
+-------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/schmidt/Desktop/Research/Analysis/output/log_ACS_merge.log
+  log type:  text
+ opened on:  29 Apr 2025, 00:59:56
+
+. 
+. forvalues i = 2015/2019 {
+  2.         use "./data/ACS_`i'.dta", clear
+  3.         merge m:1 county using "./data/CenRUCC_2010.dta"
+  4.         drop _merge
+  5.         save "./data/ACS_`i'.dta", replace
+  6. }
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                           148
+        from master                         0  (_merge==1)
+        from using                        148  (_merge==2)
+
+    Matched                            32,972  (_merge==3)
+    -----------------------------------------
+file ./data/ACS_2015.dta saved
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                           154
+        from master                         0  (_merge==1)
+        from using                        154  (_merge==2)
+
+    Matched                            32,972  (_merge==3)
+    -----------------------------------------
+file ./data/ACS_2016.dta saved
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                           149
+        from master                         0  (_merge==1)
+        from using                        149  (_merge==2)
+
+    Matched                            32,972  (_merge==3)
+    -----------------------------------------
+file ./data/ACS_2017.dta saved
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                           150
+        from master                         0  (_merge==1)
+        from using                        150  (_merge==2)
+
+    Matched                            32,972  (_merge==3)
+    -----------------------------------------
+file ./data/ACS_2018.dta saved
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                           152
+        from master                         0  (_merge==1)
+        from using                        152  (_merge==2)
+
+    Matched                            32,972  (_merge==3)
+    -----------------------------------------
+file ./data/ACS_2019.dta saved
+
+. 
+. forvalues i = 2020/2023 {
+  2.         use "./data/ACS_`i'.dta", clear
+  3.         merge m:1 county using "./data/CenRUCC_2020.dta"
+  4.         drop _merge
+  5.         save "./data/ACS_`i'.dta", replace
+  6. }
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                           152
+        from master                         0  (_merge==1)
+        from using                        152  (_merge==2)
+
+    Matched                            32,966  (_merge==3)
+    -----------------------------------------
+file ./data/ACS_2020.dta saved
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                           151
+        from master                         0  (_merge==1)
+        from using                        151  (_merge==2)
+
+    Matched                            33,642  (_merge==3)
+    -----------------------------------------
+file ./data/ACS_2021.dta saved
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                           161
+        from master                         0  (_merge==1)
+        from using                        161  (_merge==2)
+
+    Matched                            33,642  (_merge==3)
+    -----------------------------------------
+file ./data/ACS_2022.dta saved
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                           148
+        from master                         0  (_merge==1)
+        from using                        148  (_merge==2)
+
+    Matched                            33,640  (_merge==3)
+    -----------------------------------------
+file ./data/ACS_2023.dta saved
+
+. 
+. use "./data/ACS_2015.dta", clear
+
+. 
+. forvalues i = 2016/2023 {
+  2.         append using "./data/ACS_`i'.dta"
+  3. }
+(variable hs_grad_25_plus was int, now long to accommodate using data's values)
+(variable bach_grad_25_plus was int, now long to accommodate using data's values)
+
+. 
+. save ./data/ACS_panel, replace
+file ./data/ACS_panel.dta saved
+
+. 
+. import delimited ./data/processed/displacement.csv, clear
+(encoding automatically selected: ISO-8859-1)
+(3 vars, 130,634 obs)
+
+. merge 1:m zip year using ./data/ACS_panel
+(variable year was int, now float to accommodate using data's values)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                       169,481
+        from master                         0  (_merge==1)
+        from using                    169,481  (_merge==2)
+
+    Matched                           130,634  (_merge==3)
+    -----------------------------------------
+
+. drop _merge
+
+. 
+. save ./data/ACS_panel, replace
+file ./data/ACS_panel.dta saved
+
+. 
+. log close
+      name:  <unnamed>
+       log:  /Users/schmidt/Desktop/Research/Analysis/output/log_ACS_merge.log
+  log type:  text
+ closed on:  29 Apr 2025, 00:59:57
+-------------------------------------------------------------------------------------------

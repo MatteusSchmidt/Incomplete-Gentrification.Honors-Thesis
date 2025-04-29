@@ -1,0 +1,156 @@
+-------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/schmidt/Desktop/Research/Analysis/output/log_model.log
+  log type:  text
+ opened on:  29 Apr 2025, 00:59:59
+
+. 
+. use ./data/med_income_spline, clear
+
+. drop if missing(eval_year, zip, curvature, slope)
+(5,173 observations deleted)
+
+. rename slope slope_inc
+
+. rename curvature curvature_inc
+
+. rename eval_year year
+
+. merge 1:1 zip year using ./data/model_data
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                        54,512
+        from master                     3,627  (_merge==1)
+        from using                     50,885  (_merge==2)
+
+    Matched                            60,755  (_merge==3)
+    -----------------------------------------
+
+. drop _merge
+
+. save ./data/model_data, replace
+file ./data/model_data.dta saved
+
+. 
+. use ./data/pct_homeownership_spline, clear
+
+. drop if missing(eval_year, zip, curvature, slope)
+(5,173 observations deleted)
+
+. rename slope slope_homeownership
+
+. rename curvature curvature_homeownership
+
+. rename eval_year year
+
+. merge 1:1 zip year using ./data/model_data
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                        50,885
+        from master                         0  (_merge==1)
+        from using                     50,885  (_merge==2)
+
+    Matched                            64,382  (_merge==3)
+    -----------------------------------------
+
+. drop _merge
+
+. save ./data/model_data, replace
+file ./data/model_data.dta saved
+
+. 
+. use ./data/median_rent_spline, clear
+
+. drop if missing(eval_year, zip, curvature, slope)
+(5,173 observations deleted)
+
+. rename slope slope_rent_med
+
+. rename curvature curvature_rent_med
+
+. rename eval_year year
+
+. merge 1:1 zip year using ./data/model_data
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                        50,885
+        from master                         0  (_merge==1)
+        from using                     50,885  (_merge==2)
+
+    Matched                            64,382  (_merge==3)
+    -----------------------------------------
+
+. drop _merge
+
+. save ./data/model_data, replace
+file ./data/model_data.dta saved
+
+. 
+. use ./data/pct_bach_grad_spline, clear
+
+. drop if missing(eval_year, zip, curvature, slope)
+(5,173 observations deleted)
+
+. rename slope slope_bach_grad
+
+. rename curvature curvature_bach_grad
+
+. rename eval_year year
+
+. merge 1:1 zip year using ./data/model_data
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                        50,885
+        from master                         0  (_merge==1)
+        from using                     50,885  (_merge==2)
+
+    Matched                            64,382  (_merge==3)
+    -----------------------------------------
+
+. drop _merge
+
+. save ./data/model_data, replace
+file ./data/model_data.dta saved
+
+. 
+. use ./data/pct_poverty_spline, clear
+
+. drop if missing(eval_year, zip, curvature, slope)
+(5,173 observations deleted)
+
+. rename slope slope_poverty
+
+. rename curvature curvature_poverty
+
+. rename eval_year year
+
+. merge 1:1 zip year using ./data/model_data
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                        50,885
+        from master                         0  (_merge==1)
+        from using                     50,885  (_merge==2)
+
+    Matched                            64,382  (_merge==3)
+    -----------------------------------------
+
+. drop _merge
+
+. drop if year < 2019
+(32,477 observations deleted)
+
+. save ./data/model_data, replace
+file ./data/model_data.dta saved
+
+. 
+. log close
+      name:  <unnamed>
+       log:  /Users/schmidt/Desktop/Research/Analysis/output/log_model.log
+  log type:  text
+ closed on:  29 Apr 2025, 01:00:00
+-------------------------------------------------------------------------------------------

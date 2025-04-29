@@ -1,0 +1,295 @@
+-------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/schmidt/Kanter Lab Dropbox/Matteus Schmidt/Kanter Project A
+> DRD Tech Disparities - Geo/Analysis/output/log_ACS_2015_codebook.log
+  log type:  text
+ opened on:   1 Apr 2025, 16:58:38
+
+. putexcel set "./codebooks/`dataset_name'_codebook_generated.xlsx", replace sh
+> eet(`dataset_name')
+note: file will be replaced when the first putexcel command is issued.
+
+. 
+. tempname formatting
+
+. postfile `formatting' str32 var_name str10 var_type str15 var_format using ".
+> /data/`dataset_name'_codebook_format.dta", replace
+
+. 
+. foreach var of varlist _all {
+  2.     local vtype : type `var'
+  3.     local vformat : format `var'
+  4.     post `formatting' ("`var'") ("`vtype'") ("`vformat'")
+  5. }
+
+. 
+. postclose `formatting'
+
+. 
+. use "./data/`dataset_name'_codebook_format.dta", clear
+
+. 
+. putexcel A2 = "VARIABLE" B2 = "DESCRIPTION" C2 = "TYPE" D2 = "FORMAT" E2 = "L
+> OOKUP"
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+
+. 
+. local row = 3
+
+. 
+. //-------------------------------------------------------------------\\
+. /*
+>         Change the list of variables named lookups to contain those which you
+> 'd like 
+>                 Frequencies and summary statistics of
+>                 
+>         Column names separated by spaces contained within the quotes
+> */
+. 
+. local lookups ""
+
+. 
+. //-------------------------------------------------------------------//
+. 
+. forvalues i = 1/`=_N' {
+  2.         local condition = 0
+  3.         local name = var_name[`i']
+  4.         
+.         foreach varname in `lookups' {
+  5.                 if var_name[`i'] == "`varname'" {
+  6.                         local condition = 1
+  7.                 }
+  8.         }
+  9.         
+.         if `condition' == 1 {
+ 10.         putexcel A`row' = "`name'" C`row' = "`vtype'" D`row' = "`vformat'"
+>  E`row' = `"=HYPERLINK("#`name'!A1", "See Tab")"'
+ 11.     }
+ 12.     else {
+ 13.         putexcel A`row' = "`name'" C`row' = "`vtype'" D`row' = "`vformat'"
+ 14.     }
+ 15.         
+.     local ++row
+ 16. }
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+
+. 
+. use "$workdir/data/`dataset_name'.dta", clear
+
+. 
+. //-------------------------------------------------------------------\\
+. /*
+>         Change the list of variables named lookups to contain those which you
+> 'd like frequency 
+>                 tables of (Summary statistics not computed)
+>                 
+>         Column names separated by spaces following <lookups>
+> */
+. 
+. local lookups 
+
+. 
+. //-------------------------------------------------------------------//
+. 
+. putexcel set "./codebooks/`dataset_name'_codebook_generated.xlsx", modify she
+> et("Summary Statistics")
+
+. putexcel A1 = "`dataset_name'"
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+
+. local place = 3
+
+. foreach var of varlist _all {
+  2.         capture confirm numeric variable `var'
+  3.         if _rc != 0 | strpos("`lookups'", "`var'") {
+  4.                 continue
+  5.         }
+  6.         
+.         quietly summarize `var', detail
+  7.         local me : display %9.2f r(mean)
+  8.         local med : display %9.2f r(p50)
+  9.         local std_dev : display %9.2f r(sd)
+ 10.         local min : display %9.2f r(min)
+ 11.         local max : display %9.2f r(max)
+ 12.         local obs = r(N)
+ 13.         local missing = _N - r(N)
+ 14.         
+.         putexcel A2 = "Variable" B2 = "Mean" C2 = "Median" D2 = "Standard Dev
+> iation" E2 = "Minimum"
+ 15.         putexcel F2 = "Maximum" G2 = "Missing Values" H2 = "Observations"
+ 16.         putexcel A`place' = "`var'" B`place' = `me' C`place' = `med' D`pla
+> ce' = `std_dev' 
+ 17.         putexcel E`place' = `min' F`place' = `max' G`place' = `missing' H`
+> place' = `obs'
+ 18.         local place = `place' + 1
+ 19. }
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+file ./codebooks/ACS_2015_codebook_generated.xlsx saved
+
+. 
+. foreach item in `lookups' {
+  2.         putexcel set "./codebooks/`dataset_name'_codebook_generated.xlsx",
+>  modify sheet("`item'")
+  3.         capture confirm numeric variable `item'
+  4.         if _rc == 0 {  
+  5.                 tostring `item', replace force
+  6.                 replace `item' = "MISSING" if `item' == "."
+  7.         }
+  8.         else {
+  9.                 replace `item' = "EMPTY" if `item' == ""
+ 10.         }
+ 11.         tabulate `item', matcell(freq)
+ 12.         levelsof `item', local(categories)
+ 13. 
+.         scalar total_freq = 0
+ 14.         matrix percent = freq / _N * 100        
+ 15.         putexcel A7 = "`item'" B7 = "Description" C7 = "Freq." D7 = "Perce
+> ntage"
+ 16. 
+.         local index = 1
+ 17.         local place = 8
+ 18.         local has_missing = 0
+ 19.         foreach category in `categories' {
+ 20.                 if `"`category'"' == "MISSING" | `"`category'"' == "EMPTY"
+>  {
+ 21.                         local num_categories: word count `categories'
+ 22.                         local missing_place = `num_categories' + 7
+ 23.                         putexcel A`missing_place' = `"`category'"' C`missi
+> ng_place' = freq[`index',1] D`missing_place' = percent[`index',1]
+ 24.                         local has_missing = 1
+ 25.                 }
+ 26.                 else {
+ 27.                         putexcel A`place' = `"`category'"' C`place' = freq
+> [`index',1] D`place' = percent[`index',1]
+ 28.                         local place = `place' + 1
+ 29.                 }
+ 30.                 scalar total_freq = total_freq + freq[`index',1]
+ 31.                 local index = `index' + 1
+ 32.         }
+ 33.         if `has_missing' == 1 {
+ 34.                 local place = `place' + 1
+ 35.         }
+ 36.         putexcel A`place' = "Total" C`place' = total_freq D`place' = 100, 
+> bold
+ 37.         
+.         local place = `place' + 2
+ 38.         putexcel D`place' = `"=HYPERLINK("#`dataset_name'!A1", "home <<")"
+> '
+ 39. }
+
+. 
+. log close
+      name:  <unnamed>
+       log:  /Users/schmidt/Kanter Lab Dropbox/Matteus Schmidt/Kanter Project A
+> DRD Tech Disparities - Geo/Analysis/output/log_ACS_2015_codebook.log
+  log type:  text
+ closed on:   1 Apr 2025, 16:58:39
+-------------------------------------------------------------------------------

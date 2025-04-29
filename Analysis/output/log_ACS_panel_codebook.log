@@ -1,0 +1,842 @@
+--------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/schmidt/Desktop/Research/Analy
+> sis/output/log_ACS_panel_codebook.log
+  log type:  text
+ opened on:  28 Apr 2025, 17:45:15
+
+. putexcel set "./codebooks/`dataset_name'_codeboo
+> k_generated.xlsx", replace sheet(`dataset_name')
+note: file will be replaced when the first
+putexcel command is issued.
+
+. 
+. tempname formatting
+
+. postfile `formatting' str32 var_name str10 var_t
+> ype str15 var_format using "./data/`dataset_name
+> '_codebook_format.dta", replace
+
+. 
+. foreach var of varlist _all {
+  2.     local vtype : type `var'
+  3.     local vformat : format `var'
+  4.     post `formatting' ("`var'") ("`vtype'") (
+> "`vformat'")
+  5. }
+
+. 
+. postclose `formatting'
+
+. 
+. use "./data/`dataset_name'_codebook_format.dta",
+>  clear
+
+. 
+. putexcel A2 = "VARIABLE" B2 = "DESCRIPTION" C2 =
+>  "TYPE" D2 = "FORMAT" E2 = "LOOKUP"
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+
+. 
+. local row = 3
+
+. 
+. //----------------------------------------------
+> ---------------------\\
+. /*
+>         Change the list of variables named looku
+> ps to contain those which you'd like 
+>                 Frequencies and summary statisti
+> cs of
+>                 
+>         Column names separated by spaces contain
+> ed within the quotes
+> */
+. 
+. local lookups "RUCC_2023 RUCC_2013 RUCC_descript
+> ion"
+
+. 
+. //----------------------------------------------
+> ---------------------//
+. 
+. forvalues i = 1/`=_N' {
+  2.         local condition = 0
+  3.         local name = var_name[`i']
+  4.         
+.         foreach varname in `lookups' {
+  5.                 if var_name[`i'] == "`varname
+> '" {
+  6.                         local condition = 1
+  7.                 }
+  8.         }
+  9.         
+.         if `condition' == 1 {
+ 10.         putexcel A`row' = "`name'" C`row' = "
+> `vtype'" D`row' = "`vformat'" E`row' = `"=HYPERL
+> INK("#`name'!A1", "See Tab")"'
+ 11.     }
+ 12.     else {
+ 13.         putexcel A`row' = "`name'" C`row' = "
+> `vtype'" D`row' = "`vformat'"
+ 14.     }
+ 15.         
+.     local ++row
+ 16. }
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+
+. 
+. use "$workdir/data/`dataset_name'.dta", clear
+
+. 
+. //----------------------------------------------
+> ---------------------\\
+. /*
+>         Change the list of variables named looku
+> ps to contain those which you'd like frequency 
+>                 tables of (Summary statistics no
+> t computed) (can copy paste from previous lookup
+> s - no quotes)
+>                 
+>         Column names separated by spaces followi
+> ng <lookups>
+> */
+. 
+. local lookups RUCC_2023 RUCC_2013 RUCC_descripti
+> on
+
+. 
+. //----------------------------------------------
+> ---------------------//
+. 
+. putexcel set "./codebooks/`dataset_name'_codeboo
+> k_generated.xlsx", modify sheet("Summary Statist
+> ics")
+
+. putexcel A1 = "`dataset_name'"
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+
+. local place = 3
+
+. foreach var of varlist _all {
+  2.         capture confirm numeric variable `var
+> '
+  3.         if _rc != 0 | strpos("`lookups'", "`v
+> ar'") | "`var'" == "zip" | "`var'" == "county" {
+  4.                 continue
+  5.         }
+  6.         
+.         quietly summarize `var', detail
+  7.         local me : display %9.2f r(mean)
+  8.         local med : display %9.2f r(p50)
+  9.         local std_dev : display %9.2f r(sd)
+ 10.         local min : display %9.2f r(min)
+ 11.         local max : display %9.2f r(max)
+ 12.         local obs = r(N)
+ 13.         local missing = _N - r(N)
+ 14.         
+.         putexcel A2 = "Variable" B2 = "Mean" C2 
+> = "Median" D2 = "Standard Deviation" E2 = "Minim
+> um"
+ 15.         putexcel F2 = "Maximum" G2 = "Missing
+>  Values" H2 = "Observations"
+ 16.         putexcel A`place' = "`var'" B`place' 
+> = `me' C`place' = `med' D`place' = `std_dev' 
+ 17.         putexcel E`place' = `min' F`place' = 
+> `max' G`place' = `missing' H`place' = `obs'
+ 18.         local place = `place' + 1
+ 19. }
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+
+. 
+. foreach item in `lookups' {
+  2.         putexcel set "./codebooks/`dataset_na
+> me'_codebook_generated.xlsx", modify sheet("`ite
+> m'")
+  3.         capture confirm numeric variable `ite
+> m'
+  4.         if _rc == 0 {  
+  5.                 tostring `item', replace forc
+> e
+  6.                 replace `item' = "MISSING" if
+>  `item' == "."
+  7.         }
+  8.         else {
+  9.                 replace `item' = "EMPTY" if `
+> item' == ""
+ 10.         }
+ 11.         tabulate `item', matcell(freq)
+ 12.         levelsof `item', local(categories)
+ 13. 
+.         scalar total_freq = 0
+ 14.         matrix percent = freq / _N * 100     
+>    
+ 15.         putexcel A7 = "`item'" B7 = "Descript
+> ion" C7 = "Freq." D7 = "Percentage"
+ 16. 
+.         local index = 1
+ 17.         local place = 8
+ 18.         local has_missing = 0
+ 19.         foreach category in `categories' {
+ 20.                 if `"`category'"' == "MISSING
+> " | `"`category'"' == "EMPTY" {
+ 21.                         local num_categories:
+>  word count `categories'
+ 22.                         local missing_place =
+>  `num_categories' + 7
+ 23.                         putexcel A`missing_pl
+> ace' = `"`category'"' C`missing_place' = freq[`i
+> ndex',1] D`missing_place' = percent[`index',1]
+ 24.                         local has_missing = 1
+ 25.                 }
+ 26.                 else {
+ 27.                         putexcel A`place' = `
+> "`category'"' C`place' = freq[`index',1] D`place
+> ' = percent[`index',1]
+ 28.                         local place = `place'
+>  + 1
+ 29.                 }
+ 30.                 scalar total_freq = total_fre
+> q + freq[`index',1]
+ 31.                 local index = `index' + 1
+ 32.         }
+ 33.         if `has_missing' == 1 {
+ 34.                 local place = `place' + 1
+ 35.         }
+ 36.         putexcel A`place' = "Total" C`place' 
+> = total_freq D`place' = 100, bold
+ 37.         
+.         local place = `place' + 2
+ 38.         putexcel D`place' = `"=HYPERLINK("#`d
+> ataset_name'!A1", "home <<")"'
+ 39. }
+RUCC_2023 was byte now str1
+variable RUCC_2023 was str1 now str7
+(166,204 real changes made)
+
+  RUCC_2023 |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |     37,399       12.46       12.46
+          2 |     22,004        7.33       19.79
+          3 |     16,469        5.49       25.28
+          4 |      9,952        3.32       28.60
+          5 |      3,390        1.13       29.72
+          6 |     12,980        4.32       34.05
+          7 |      8,800        2.93       36.98
+          8 |     10,664        3.55       40.53
+          9 |     12,271        4.09       44.62
+    MISSING |    166,204       55.38      100.00
+------------+-----------------------------------
+      Total |    300,133      100.00
+`"1"' `"2"' `"3"' `"4"' `"5"' `"6"' `"7"' `"8"' `"
+> 9"' `"MISSING"'
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+RUCC_2013 was byte now str1
+variable RUCC_2013 was str1 now str7
+(134,538 real changes made)
+
+  RUCC_2013 |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |     45,153       15.04       15.04
+          2 |     28,281        9.42       24.47
+          3 |     20,104        6.70       31.17
+          4 |     13,030        4.34       35.51
+          5 |      4,985        1.66       37.17
+          6 |     22,090        7.36       44.53
+          7 |     16,246        5.41       49.94
+          8 |      5,539        1.85       51.79
+          9 |     10,167        3.39       55.17
+    MISSING |    134,538       44.83      100.00
+------------+-----------------------------------
+      Total |    300,133      100.00
+`"1"' `"2"' `"3"' `"4"' `"5"' `"6"' `"7"' `"8"' `"
+> 9"' `"MISSING"'
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+(591 real changes made)
+
+                       RUCC_description |      Fre
+> q.     Percent        Cum.
+----------------------------------------+---------
+> --------------------------
+                                  EMPTY |        5
+> 91        0.20        0.20
+Metro - Counties in metro areas of 1 .. |     82,5
+> 52       27.51       27.70
+Metro - Counties in metro areas of 25.. |     50,2
+> 85       16.75       44.46
+Metro - Counties in metro areas of fe.. |     36,5
+> 73       12.19       56.64
+Nonmetro - Completely rural or less t.. |      5,5
+> 39        1.85       58.49
+Nonmetro - Completely rural or less t.. |     10,1
+> 67        3.39       61.87
+Nonmetro - Urban population of 2,500 .. |     22,0
+> 90        7.36       69.23
+Nonmetro - Urban population of 2,500 .. |     16,2
+> 46        5.41       74.65
+Nonmetro - Urban population of 20,000.. |     22,9
+> 82        7.66       82.31
+Nonmetro - Urban population of 20,000.. |      8,3
+> 75        2.79       85.10
+Nonmetro - Urban population of 5,000 .. |     12,9
+> 80        4.32       89.42
+Nonmetro - Urban population of 5,000 .. |      8,8
+> 00        2.93       92.35
+Nonmetro - Urban population of fewer .. |     10,6
+> 64        3.55       95.91
+Nonmetro - Urban population of fewer .. |     12,2
+> 71        4.09       99.99
+                         Not Applicable |         
+> 18        0.01      100.00
+----------------------------------------+---------
+> --------------------------
+                                  Total |    300,1
+> 33      100.00
+`"EMPTY"' `"Metro - Counties in metro areas of 1 m
+> illion population or more"' `"Metro - Counties i
+> n metro areas of 250,000 to 1 million population
+> "' `"Metro - Counties in metro areas of fewer th
+> an 250,000 population"' `"Nonmetro - Completely 
+> rural or less than 2,500 urban population, adjac
+> ent to a metro area"' `"Nonmetro - Completely ru
+> ral or less than 2,500 urban population, not adj
+> acent to a metro area"' `"Nonmetro - Urban popul
+> ation of 2,500 to 19,999, adjacent to a metro ar
+> ea"' `"Nonmetro - Urban population of 2,500 to 1
+> 9,999, not adjacent to a metro area"' `"Nonmetro
+>  - Urban population of 20,000 or more, adjacent 
+> to a metro area"' `"Nonmetro - Urban population 
+> of 20,000 or more, not adjacent to a metro area"
+> ' `"Nonmetro - Urban population of 5,000 to 20,0
+> 00, adjacent to a metro area"' `"Nonmetro - Urba
+> n population of 5,000 to 20,000, not adjacent to
+>  a metro area"' `"Nonmetro - Urban population of
+>  fewer than 5,000, adjacent to a metro area"' `"
+> Nonmetro - Urban population of fewer than 5,000,
+>  not adjacent to a metro area"' `"Not Applicable
+> "'
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+file ./codebooks/ACS_panel_codebook_generated.xlsx
+>  saved
+
+. 
+. log close
+      name:  <unnamed>
+       log:  /Users/schmidt/Desktop/Research/Analy
+> sis/output/log_ACS_panel_codebook.log
+  log type:  text
+ closed on:  28 Apr 2025, 17:45:23
+--------------------------------------------------

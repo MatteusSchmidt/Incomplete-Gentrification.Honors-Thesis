@@ -1,0 +1,142 @@
+-------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/schmidt/Desktop/Research/Analysis/output/log_merge_cen_rucc.log
+  log type:  text
+ opened on:  29 Apr 2025, 00:59:56
+
+. 
+. use ./data/Centroid_2010, clear
+
+. 
+. // did this only for null values picked up from excel import, no real duplicates of any k
+> ind
+. merge m:m FIPS using ./data/RUCC_2013
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                            19
+        from master                         0  (_merge==1)
+        from using                         19  (_merge==2)
+
+    Matched                             3,221  (_merge==3)
+    -----------------------------------------
+
+. duplicates list
+
+Duplicates in terms of all variables
+
+  +-------------------------------------------------------------------------------+
+  |  Obs | popula~n | latitude | longit~e | FIPS | Pop~2010 | RUC~2013 | Descri~n |
+  | 3222 |        . |        . |        . |      |        . |        . |          |
+  |-------------------------------------------------------------------------------|
+  |                                        _merge                                 |
+  |                                Using only (2)                                 |
+  +-------------------------------------------------------------------------------+
+
+  +-------------------------------------------------------------------------------+
+  |  Obs | popula~n | latitude | longit~e | FIPS | Pop~2010 | RUC~2013 | Descri~n |
+  | 3223 |        . |        . |        . |      |        . |        . |          |
+  |-------------------------------------------------------------------------------|
+  |                                        _merge                                 |
+  |                                Using only (2)                                 |
+  +-------------------------------------------------------------------------------+
+
+  +-------------------------------------------------------------------------------+
+  |  Obs | popula~n | latitude | longit~e | FIPS | Pop~2010 | RUC~2013 | Descri~n |
+  | 3224 |        . |        . |        . |      |        . |        . |          |
+  |-------------------------------------------------------------------------------|
+  |                                        _merge                                 |
+  |                                Using only (2)                                 |
+  +-------------------------------------------------------------------------------+
+
+  +-------------------------------------------------------------------------------+
+  |  Obs | popula~n | latitude | longit~e | FIPS | Pop~2010 | RUC~2013 | Descri~n |
+  | 3225 |        . |        . |        . |      |        . |        . |          |
+  |-------------------------------------------------------------------------------|
+  |                                        _merge                                 |
+  |                                Using only (2)                                 |
+  +-------------------------------------------------------------------------------+
+
+  +-------------------------------------------------------------------------------+
+  |  Obs | popula~n | latitude | longit~e | FIPS | Pop~2010 | RUC~2013 | Descri~n |
+  | 3226 |        . |        . |        . |      |        . |        . |          |
+  |-------------------------------------------------------------------------------|
+  |                                        _merge                                 |
+  |                                Using only (2)                                 |
+  +-------------------------------------------------------------------------------+
+
+  +-------------------------------------------------------------------------------+
+  |  Obs | popula~n | latitude | longit~e | FIPS | Pop~2010 | RUC~2013 | Descri~n |
+  | 3227 |        . |        . |        . |      |        . |        . |          |
+  |-------------------------------------------------------------------------------|
+  |                                        _merge                                 |
+  |                                Using only (2)                                 |
+  +-------------------------------------------------------------------------------+
+
+. duplicates drop FIPS, force 
+
+Duplicates in terms of FIPS
+
+(5 observations deleted)
+
+. gen RUCC_description = trim(Description)
+(1 missing value generated)
+
+. drop _merge population Population_2010 Description
+
+. rename FIPS county
+
+. destring county, replace force 
+county: all characters numeric; replaced as long
+(1 missing value generated)
+
+. save ./data/CenRUCC_2010, replace
+file ./data/CenRUCC_2010.dta saved
+
+. 
+. 
+. use ./data/Centroid_2020, clear
+
+. merge m:m FIPS using ./data/RUCC_2023
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                            30
+        from master                         8  (_merge==1)
+        from using                         22  (_merge==2)
+
+    Matched                             3,213  (_merge==3)
+    -----------------------------------------
+
+. duplicates list
+
+Duplicates in terms of all variables
+
+(0 observations are duplicates)
+
+. duplicates drop FIPS, force 
+
+Duplicates in terms of FIPS
+
+(0 observations are duplicates)
+
+. gen RUCC_description = trim(Description)
+(8 missing values generated)
+
+. drop _merge population Population_2020 Description
+
+. rename FIPS county
+
+. destring county, replace force 
+county: all characters numeric; replaced as long
+
+. save ./data/CenRUCC_2020, replace
+file ./data/CenRUCC_2020.dta saved
+
+. 
+. log close
+      name:  <unnamed>
+       log:  /Users/schmidt/Desktop/Research/Analysis/output/log_merge_cen_rucc.log
+  log type:  text
+ closed on:  29 Apr 2025, 00:59:56
+-------------------------------------------------------------------------------------------

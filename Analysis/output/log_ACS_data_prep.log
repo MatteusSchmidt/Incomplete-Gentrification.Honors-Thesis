@@ -1,0 +1,1169 @@
+-------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/schmidt/Desktop/Research/Analysis/output/log_ACS_data_prep.log
+  log type:  text
+ opened on:  29 Apr 2025, 00:59:45
+
+. 
+. cd ..
+/Users/schmidt/Desktop/Research
+
+. 
+. import delimited using "./raw/ZCTA Crosswalks/tab20_zcta520_county20_natl.txt",  clear
+(encoding automatically selected: UTF-8)
+(18 vars, 47,863 obs)
+
+. keep geoid_zcta5_20 geoid_county_20
+
+. rename geoid_zcta5_20 zip
+
+. rename geoid_county_20 county
+
+. gen temp = county
+
+. destring temp, replace
+temp already numeric; no replace
+
+. drop if inrange(temp, 72000, 72999)   // Puerto Rico
+(291 observations deleted)
+
+. drop if inrange(temp, 66000, 66999)   // Guam
+(8 observations deleted)
+
+. drop if inrange(temp, 60000, 60999)   // American Samoa
+(9 observations deleted)
+
+. drop if inrange(temp, 69000, 69999)   // Northern Mariana Islands
+(7 observations deleted)
+
+. drop if inrange(temp, 78000, 78999)   // U.S. Virgin Islands
+(9 observations deleted)
+
+. drop temp 
+
+. 
+. save "./Analysis/data/ZCTA_crosswalk_2020.dta", replace
+file ./Analysis/data/ZCTA_crosswalk_2020.dta saved
+
+. gen temp = county
+
+. destring temp, replace
+temp already numeric; no replace
+
+. drop if inrange(temp, 9000, 9999) // special case for Connecticut
+(303 observations deleted)
+
+. drop temp
+
+. save "./Analysis/data/ZCTA_crosswalk_2022.dta", replace
+file ./Analysis/data/ZCTA_crosswalk_2022.dta saved
+
+. 
+. import delimited using "./raw/ZCTA Crosswalks/acs22_cousub22_zcta520_st09.txt",  clear
+(encoding automatically selected: UTF-8)
+(18 vars, 443 obs)
+
+. keep geoid_cousub_22 geoid_zcta5_20
+
+. tostring geoid_cousub_22, gen(geoid_str) format(%012.0f)
+geoid_str generated as str12
+
+. gen county = substr(geoid_str, 3, 5)
+
+. rename geoid_zcta5_20 zip
+
+. drop geoid_cousub_22 geoid_str
+
+. destring county, replace force
+county: all characters numeric; replaced as int
+
+. drop if zip == .
+(21 observations deleted)
+
+. append using ./Analysis/data/ZCTA_crosswalk_2022.dta
+(variable zip was int, now long to accommodate using data's values)
+(variable county was int, now long to accommodate using data's values)
+
+. save "./Analysis/data/ZCTA_crosswalk_2022.dta", replace
+file ./Analysis/data/ZCTA_crosswalk_2022.dta saved
+
+. 
+. import delimited using "./raw/ZCTA Crosswalks/zcta_county_rel_10.txt", clear
+(encoding automatically selected: ISO-8859-2)
+(24 vars, 44,410 obs)
+
+. keep zcta5 state geoid
+
+. destring state, replace force
+state already numeric; no replace
+
+. drop if state == 72 | state == 66 | state == 60 | state == 69 | state == 78
+(212 observations deleted)
+
+. drop state
+
+. rename zcta5 zip
+
+. rename geoid county
+
+. 
+. save "./Analysis/data/ZCTA_crosswalk_2010.dta", replace
+file ./Analysis/data/ZCTA_crosswalk_2010.dta saved
+
+. 
+. 
+. forvalues i = 2015/2023 {
+  2.         import delimited "./Analysis/data/processed/ACS_`i'.csv", clear
+  3. 
+.         destring _all, replace force
+  4. 
+.         gen pop_under_18 = total_pop - eighteen_plus
+  5.         gen pop_18_to_65 = total_pop - sixty_five_plus - pop_under_18
+  6. //      gen race_other = total_pop - black_only - two_plus_races - hisp - non_hisp_w
+.         drop eighteen_plus
+  7. 
+.         save "./Analysis/data/ACS_`i'.dta", replace
+  8.         
+.         // median income data by county
+.         import delimited using "./raw/ACS/county household income/ACSST5Y`i'.S1901-Data.c
+> sv", varnames(1) clear
+  9.         drop in 1
+ 10.         keep geo_id s1901_c01_012e
+ 11.         rename s1901_c01_012e county_med_y
+ 12.         gen county = substr(geo_id, strlen(geo_id) - 4, 5)
+ 13.         destring county_med_y county, replace force
+ 14. 
+.         if `i' <= 2020 {
+ 15.                 merge 1:m county using ./Analysis/data/ZCTA_crosswalk_2010.dta
+ 16.                 drop if _merge ==1 | _merge == 2
+ 17.                 drop _merge
+ 18.                 save ./Analysis/data/ZCTA_crosswalk_2010.dta, replace
+ 19.         }
+ 20.         else {
+ 21.                 if `i' > 2021 {
+ 22.                         merge 1:m county using ./Analysis/data/ZCTA_crosswalk_2022.dta
+ 23.                         drop if _merge ==1 | _merge == 2
+ 24.                         drop _merge
+ 25.                         save ./Analysis/data/ZCTA_crosswalk_2022.dta, replace
+ 26.                 }
+ 27.                 else {
+ 28.                         merge 1:m county using ./Analysis/data/ZCTA_crosswalk_2020.dta
+ 29.                         drop if _merge ==1 | _merge == 2
+ 30.                         drop _merge
+ 31.                         save ./Analysis/data/ZCTA_crosswalk_2020.dta, replace
+ 32.                 }
+ 33.         }               
+ 34. 
+.         
+.         // pop data by county
+.         import delimited using "./raw/ACS/county pop/ACSST5Y`i'.S0101-Data.csv", varnames
+> (1) clear
+ 35.         drop in 1
+ 36.         keep geo_id s0101_c01_001e
+ 37.         rename s0101_c01_001e county_pop
+ 38.         gen county = substr(geo_id, strlen(geo_id) - 4, 5)
+ 39.         destring county_pop county, replace force
+ 40. 
+.         if `i' <= 2020 {
+ 41.                 merge 1:m county using ./Analysis/data/ZCTA_crosswalk_2010.dta
+ 42.         }
+ 43.         else {
+ 44.                 if `i' > 2021 {
+ 45.                         merge 1:m county using ./Analysis/data/ZCTA_crosswalk_2022.dta
+ 46.                 }
+ 47.                 else {
+ 48.                         merge 1:m county using ./Analysis/data/ZCTA_crosswalk_2020.dta
+ 49.                 }
+ 50.         }               
+ 51.         drop if _merge ==1 | _merge == 2
+ 52.         drop _merge
+ 53.         
+.         // Step 1: Generate a random draw per observation, scaled by county_pop
+.         gen rand_weighted = runiform()^ (1 / county_pop)
+ 54. 
+.         // Step 2: Tag the observation with the highest weighted draw per zip
+.         gen byte selected = 0
+ 55.         bysort zip (rand_weighted): replace selected = 1 if _n == _N
+ 56. 
+.         // Step 3: Keep only the selected observations
+.         keep if selected
+ 57.         drop rand_weighted selected
+ 58.         
+. 
+.         destring zip, replace force
+ 59.         merge 1:1 zip using "./Analysis/data/ACS_`i'.dta"
+ 60.         
+.         count if _merge == 1
+ 61.         local unmatched = r(N)
+ 62.         di "percent of unmatched crosswalk zip data: " 100 * (`unmatched' / _N)
+ 63.                 
+.         count if _merge == 2
+ 64.         local unmatched = r(N)
+ 65.         di "percent of unmatched ACS zip data: " 100 * (`unmatched' / _N)
+ 66.         drop if _merge == 1 | _merge == 2
+ 67.         
+.         drop _merge geo_id county_pop
+ 68.         
+.         gen year = `i'
+ 69.         
+.         save "./Analysis/data/ACS_`i'.dta", replace
+ 70. }
+(encoding automatically selected: ISO-8859-1)
+(38 vars, 33,120 obs)
+hs_incomp_25_plus already numeric; no replace
+hs_grad_25_plus already numeric; no replace
+bach_grad_25_plus already numeric; no replace
+perc_bach_grad_and_above: contains nonnumeric characters; replaced as double
+(341 missing values generated)
+zip already numeric; no replace
+total_pop already numeric; no replace
+eighteen_plus already numeric; no replace
+sixty_five_plus already numeric; no replace
+nonhisp_white_perc: contains nonnumeric characters; replaced as double
+(310 missing values generated)
+hisp_perc: contains nonnumeric characters; replaced as double
+(310 missing values generated)
+nonhisp_black_perc: contains nonnumeric characters; replaced as double
+(310 missing values generated)
+two_plus_races_perc: contains nonnumeric characters; replaced as double
+(310 missing values generated)
+nonhisp_asian_perc: contains nonnumeric characters; replaced as double
+(310 missing values generated)
+civ_emp_16_plus already numeric; no replace
+civ_unemp_16_plus already numeric; no replace
+med_h_y: contains nonnumeric characters; replaced as long
+(2070 missing values generated)
+perc_below_pov_line: contains nonnumeric characters; replaced as double
+(519 missing values generated)
+mean_com_time_min: contains nonnumeric characters; replaced as double
+(2252 missing values generated)
+priv_hi already numeric; no replace
+pub_hi already numeric; no replace
+uninsured already numeric; no replace
+hh_w_child_pov_perc: contains nonnumeric characters; replaced as double
+(1516 missing values generated)
+housing_units_occ already numeric; no replace
+homeowner_units_occ already numeric; no replace
+renters_units_occ already numeric; no replace
+med_rent: contains nonnumeric characters; replaced as int
+(5697 missing values generated)
+med_household_price: contains nonnumeric characters; replaced as long
+(2367 missing values generated)
+hi_05k: contains nonnumeric characters; replaced as double
+(571 missing values generated)
+hi_510k: contains nonnumeric characters; replaced as double
+(571 missing values generated)
+hi_1015k: contains nonnumeric characters; replaced as double
+(571 missing values generated)
+hi_1520k: contains nonnumeric characters; replaced as double
+(571 missing values generated)
+hi_2025k: contains nonnumeric characters; replaced as double
+(571 missing values generated)
+hi_2535k: contains nonnumeric characters; replaced as double
+(571 missing values generated)
+hi_3550k: contains nonnumeric characters; replaced as double
+(571 missing values generated)
+hi_5075k: contains nonnumeric characters; replaced as double
+(571 missing values generated)
+hi_75100k: contains nonnumeric characters; replaced as double
+(571 missing values generated)
+hi_100150k: contains nonnumeric characters; replaced as double
+(571 missing values generated)
+hi_150k_plus: contains nonnumeric characters; replaced as double
+(571 missing values generated)
+file ./Analysis/data/ACS_2015.dta saved
+(encoding automatically selected: ISO-8859-1)
+(131 vars, 3,221 obs)
+(1 observation deleted)
+county_med_y: contains nonnumeric characters; replaced as long
+(1 missing value generated)
+county: all characters numeric; replaced as long
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                           102
+        from master                        80  (_merge==1)
+        from using                         22  (_merge==2)
+
+    Matched                            44,176  (_merge==3)
+    -----------------------------------------
+(102 observations deleted)
+file ./Analysis/data/ZCTA_crosswalk_2010.dta saved
+(encoding automatically selected: ISO-8859-1)
+(219 vars, 3,221 obs)
+(1 observation deleted)
+county_pop: all characters numeric; replaced as long
+county: all characters numeric; replaced as long
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                            80
+        from master                        80  (_merge==1)
+        from using                          0  (_merge==2)
+
+    Matched                            44,176  (_merge==3)
+    -----------------------------------------
+(80 observations deleted)
+(32,972 real changes made)
+(11,204 observations deleted)
+zip already numeric; no replace
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                           148
+        from master                         0  (_merge==1)
+        from using                        148  (_merge==2)
+
+    Matched                            32,972  (_merge==3)
+    -----------------------------------------
+  0
+percent of unmatched crosswalk zip data: 0
+  148
+percent of unmatched ACS zip data: .4468599
+(148 observations deleted)
+file ./Analysis/data/ACS_2015.dta saved
+(encoding automatically selected: ISO-8859-1)
+(38 vars, 33,120 obs)
+hs_incomp_25_plus already numeric; no replace
+hs_grad_25_plus already numeric; no replace
+bach_grad_25_plus already numeric; no replace
+perc_bach_grad_and_above: contains nonnumeric characters; replaced as double
+(355 missing values generated)
+zip already numeric; no replace
+total_pop already numeric; no replace
+eighteen_plus already numeric; no replace
+sixty_five_plus already numeric; no replace
+nonhisp_white_perc: contains nonnumeric characters; replaced as double
+(321 missing values generated)
+hisp_perc: contains nonnumeric characters; replaced as double
+(321 missing values generated)
+nonhisp_black_perc: contains nonnumeric characters; replaced as double
+(321 missing values generated)
+two_plus_races_perc: contains nonnumeric characters; replaced as double
+(321 missing values generated)
+nonhisp_asian_perc: contains nonnumeric characters; replaced as double
+(321 missing values generated)
+civ_emp_16_plus already numeric; no replace
+civ_unemp_16_plus already numeric; no replace
+med_h_y: contains nonnumeric characters; replaced as long
+(2024 missing values generated)
+perc_below_pov_line: contains nonnumeric characters; replaced as double
+(528 missing values generated)
+mean_com_time_min: contains nonnumeric characters; replaced as double
+(2264 missing values generated)
+priv_hi already numeric; no replace
+pub_hi already numeric; no replace
+uninsured already numeric; no replace
+hh_w_child_pov_perc: contains nonnumeric characters; replaced as double
+(1561 missing values generated)
+housing_units_occ already numeric; no replace
+homeowner_units_occ already numeric; no replace
+renters_units_occ already numeric; no replace
+med_rent: contains nonnumeric characters; replaced as int
+(5755 missing values generated)
+med_household_price: contains nonnumeric characters; replaced as long
+(2384 missing values generated)
+hi_05k: contains nonnumeric characters; replaced as double
+(580 missing values generated)
+hi_510k: contains nonnumeric characters; replaced as double
+(580 missing values generated)
+hi_1015k: contains nonnumeric characters; replaced as double
+(580 missing values generated)
+hi_1520k: contains nonnumeric characters; replaced as double
+(580 missing values generated)
+hi_2025k: contains nonnumeric characters; replaced as double
+(580 missing values generated)
+hi_2535k: contains nonnumeric characters; replaced as double
+(580 missing values generated)
+hi_3550k: contains nonnumeric characters; replaced as double
+(580 missing values generated)
+hi_5075k: contains nonnumeric characters; replaced as double
+(580 missing values generated)
+hi_75100k: contains nonnumeric characters; replaced as double
+(580 missing values generated)
+hi_100150k: contains nonnumeric characters; replaced as double
+(580 missing values generated)
+hi_150k_plus: contains nonnumeric characters; replaced as double
+(580 missing values generated)
+file ./Analysis/data/ACS_2016.dta saved
+(encoding automatically selected: ISO-8859-1)
+(131 vars, 3,221 obs)
+(1 observation deleted)
+county_med_y: all characters numeric; replaced as long
+county: all characters numeric; replaced as long
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                            80
+        from master                        80  (_merge==1)
+        from using                          0  (_merge==2)
+
+    Matched                            44,176  (_merge==3)
+    -----------------------------------------
+(80 observations deleted)
+file ./Analysis/data/ZCTA_crosswalk_2010.dta saved
+(encoding automatically selected: ISO-8859-1)
+(219 vars, 3,221 obs)
+(1 observation deleted)
+county_pop: all characters numeric; replaced as long
+county: all characters numeric; replaced as long
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                            80
+        from master                        80  (_merge==1)
+        from using                          0  (_merge==2)
+
+    Matched                            44,176  (_merge==3)
+    -----------------------------------------
+(80 observations deleted)
+(32,972 real changes made)
+(11,204 observations deleted)
+zip already numeric; no replace
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                           148
+        from master                         0  (_merge==1)
+        from using                        148  (_merge==2)
+
+    Matched                            32,972  (_merge==3)
+    -----------------------------------------
+  0
+percent of unmatched crosswalk zip data: 0
+  148
+percent of unmatched ACS zip data: .4468599
+(148 observations deleted)
+file ./Analysis/data/ACS_2016.dta saved
+(encoding automatically selected: ISO-8859-1)
+(38 vars, 33,120 obs)
+hs_incomp_25_plus already numeric; no replace
+hs_grad_25_plus already numeric; no replace
+bach_grad_25_plus already numeric; no replace
+perc_bach_grad_and_above: contains nonnumeric characters; replaced as double
+(358 missing values generated)
+zip already numeric; no replace
+total_pop already numeric; no replace
+eighteen_plus already numeric; no replace
+sixty_five_plus already numeric; no replace
+nonhisp_white_perc: contains nonnumeric characters; replaced as double
+(317 missing values generated)
+hisp_perc: contains nonnumeric characters; replaced as double
+(317 missing values generated)
+nonhisp_black_perc: contains nonnumeric characters; replaced as double
+(317 missing values generated)
+two_plus_races_perc: contains nonnumeric characters; replaced as double
+(317 missing values generated)
+nonhisp_asian_perc: contains nonnumeric characters; replaced as double
+(317 missing values generated)
+civ_emp_16_plus already numeric; no replace
+civ_unemp_16_plus already numeric; no replace
+med_h_y: contains nonnumeric characters; replaced as long
+(2182 missing values generated)
+perc_below_pov_line: contains nonnumeric characters; replaced as double
+(522 missing values generated)
+mean_com_time_min: contains nonnumeric characters; replaced as double
+(2347 missing values generated)
+priv_hi already numeric; no replace
+pub_hi already numeric; no replace
+uninsured already numeric; no replace
+hh_w_child_pov_perc: contains nonnumeric characters; replaced as double
+(1608 missing values generated)
+housing_units_occ already numeric; no replace
+homeowner_units_occ already numeric; no replace
+renters_units_occ already numeric; no replace
+med_rent: contains nonnumeric characters; replaced as int
+(5907 missing values generated)
+med_household_price: contains nonnumeric characters; replaced as long
+(2588 missing values generated)
+hi_05k already numeric; no replace
+hi_510k already numeric; no replace
+hi_1015k already numeric; no replace
+hi_1520k already numeric; no replace
+hi_2025k already numeric; no replace
+hi_2535k already numeric; no replace
+hi_3550k already numeric; no replace
+hi_5075k already numeric; no replace
+hi_75100k already numeric; no replace
+hi_100150k already numeric; no replace
+hi_150k_plus already numeric; no replace
+file ./Analysis/data/ACS_2017.dta saved
+(encoding automatically selected: ISO-8859-1)
+(131 vars, 3,221 obs)
+(1 observation deleted)
+county_med_y: all characters numeric; replaced as long
+county: all characters numeric; replaced as long
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                            80
+        from master                        80  (_merge==1)
+        from using                          0  (_merge==2)
+
+    Matched                            44,176  (_merge==3)
+    -----------------------------------------
+(80 observations deleted)
+file ./Analysis/data/ZCTA_crosswalk_2010.dta saved
+(encoding automatically selected: ISO-8859-1)
+(459 vars, 3,221 obs)
+(1 observation deleted)
+county_pop: all characters numeric; replaced as long
+county: all characters numeric; replaced as long
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                            80
+        from master                        80  (_merge==1)
+        from using                          0  (_merge==2)
+
+    Matched                            44,176  (_merge==3)
+    -----------------------------------------
+(80 observations deleted)
+(32,972 real changes made)
+(11,204 observations deleted)
+zip already numeric; no replace
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                           148
+        from master                         0  (_merge==1)
+        from using                        148  (_merge==2)
+
+    Matched                            32,972  (_merge==3)
+    -----------------------------------------
+  0
+percent of unmatched crosswalk zip data: 0
+  148
+percent of unmatched ACS zip data: .4468599
+(148 observations deleted)
+file ./Analysis/data/ACS_2017.dta saved
+(encoding automatically selected: ISO-8859-1)
+(38 vars, 33,120 obs)
+hs_incomp_25_plus already numeric; no replace
+hs_grad_25_plus already numeric; no replace
+bach_grad_25_plus already numeric; no replace
+perc_bach_grad_and_above: contains nonnumeric characters; replaced as double
+(357 missing values generated)
+zip already numeric; no replace
+total_pop already numeric; no replace
+eighteen_plus already numeric; no replace
+sixty_five_plus already numeric; no replace
+nonhisp_white_perc: contains nonnumeric characters; replaced as double
+(321 missing values generated)
+hisp_perc: contains nonnumeric characters; replaced as double
+(321 missing values generated)
+nonhisp_black_perc: contains nonnumeric characters; replaced as double
+(321 missing values generated)
+two_plus_races_perc: contains nonnumeric characters; replaced as double
+(321 missing values generated)
+nonhisp_asian_perc: contains nonnumeric characters; replaced as double
+(321 missing values generated)
+civ_emp_16_plus: contains nonnumeric characters; replaced as long
+(35 missing values generated)
+civ_unemp_16_plus: contains nonnumeric characters; replaced as int
+(35 missing values generated)
+med_h_y: contains nonnumeric characters; replaced as long
+(2248 missing values generated)
+perc_below_pov_line: contains nonnumeric characters; replaced as double
+(564 missing values generated)
+mean_com_time_min: contains nonnumeric characters; replaced as double
+(2402 missing values generated)
+priv_hi already numeric; no replace
+pub_hi already numeric; no replace
+uninsured already numeric; no replace
+hh_w_child_pov_perc: contains nonnumeric characters; replaced as double
+(1633 missing values generated)
+housing_units_occ already numeric; no replace
+homeowner_units_occ already numeric; no replace
+renters_units_occ already numeric; no replace
+med_rent: contains nonnumeric characters; replaced as int
+(5982 missing values generated)
+med_household_price: contains nonnumeric characters; replaced as long
+(2530 missing values generated)
+hi_05k already numeric; no replace
+hi_510k already numeric; no replace
+hi_1015k already numeric; no replace
+hi_1520k already numeric; no replace
+hi_2025k already numeric; no replace
+hi_2535k already numeric; no replace
+hi_3550k already numeric; no replace
+hi_5075k already numeric; no replace
+hi_75100k already numeric; no replace
+hi_100150k already numeric; no replace
+hi_150k_plus already numeric; no replace
+file ./Analysis/data/ACS_2018.dta saved
+(encoding automatically selected: ISO-8859-1)
+(131 vars, 3,221 obs)
+(1 observation deleted)
+county_med_y: contains nonnumeric characters; replaced as long
+(1 missing value generated)
+county: all characters numeric; replaced as long
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                            80
+        from master                        80  (_merge==1)
+        from using                          0  (_merge==2)
+
+    Matched                            44,176  (_merge==3)
+    -----------------------------------------
+(80 observations deleted)
+file ./Analysis/data/ZCTA_crosswalk_2010.dta saved
+(encoding automatically selected: ISO-8859-1)
+(459 vars, 3,221 obs)
+(1 observation deleted)
+county_pop: all characters numeric; replaced as long
+county: all characters numeric; replaced as long
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                            80
+        from master                        80  (_merge==1)
+        from using                          0  (_merge==2)
+
+    Matched                            44,176  (_merge==3)
+    -----------------------------------------
+(80 observations deleted)
+(32,972 real changes made)
+(11,204 observations deleted)
+zip already numeric; no replace
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                           148
+        from master                         0  (_merge==1)
+        from using                        148  (_merge==2)
+
+    Matched                            32,972  (_merge==3)
+    -----------------------------------------
+  0
+percent of unmatched crosswalk zip data: 0
+  148
+percent of unmatched ACS zip data: .4468599
+(148 observations deleted)
+file ./Analysis/data/ACS_2018.dta saved
+(encoding automatically selected: ISO-8859-1)
+(38 vars, 33,120 obs)
+hs_incomp_25_plus already numeric; no replace
+hs_grad_25_plus already numeric; no replace
+bach_grad_25_plus already numeric; no replace
+perc_bach_grad_and_above: contains nonnumeric characters; replaced as double
+(383 missing values generated)
+zip already numeric; no replace
+total_pop already numeric; no replace
+eighteen_plus already numeric; no replace
+sixty_five_plus already numeric; no replace
+nonhisp_white_perc: contains nonnumeric characters; replaced as double
+(344 missing values generated)
+hisp_perc: contains nonnumeric characters; replaced as double
+(344 missing values generated)
+nonhisp_black_perc: contains nonnumeric characters; replaced as double
+(344 missing values generated)
+two_plus_races_perc: contains nonnumeric characters; replaced as double
+(344 missing values generated)
+nonhisp_asian_perc: contains nonnumeric characters; replaced as double
+(344 missing values generated)
+civ_emp_16_plus already numeric; no replace
+civ_unemp_16_plus already numeric; no replace
+med_h_y: contains nonnumeric characters; replaced as long
+(2323 missing values generated)
+perc_below_pov_line: contains nonnumeric characters; replaced as double
+(554 missing values generated)
+mean_com_time_min: contains nonnumeric characters; replaced as double
+(2439 missing values generated)
+priv_hi already numeric; no replace
+pub_hi already numeric; no replace
+uninsured already numeric; no replace
+hh_w_child_pov_perc: contains nonnumeric characters; replaced as double
+(1651 missing values generated)
+housing_units_occ already numeric; no replace
+homeowner_units_occ already numeric; no replace
+renters_units_occ already numeric; no replace
+med_rent: contains nonnumeric characters; replaced as int
+(6128 missing values generated)
+med_household_price: contains nonnumeric characters; replaced as long
+(2631 missing values generated)
+hi_05k already numeric; no replace
+hi_510k already numeric; no replace
+hi_1015k already numeric; no replace
+hi_1520k already numeric; no replace
+hi_2025k already numeric; no replace
+hi_2535k already numeric; no replace
+hi_3550k already numeric; no replace
+hi_5075k already numeric; no replace
+hi_75100k already numeric; no replace
+hi_100150k already numeric; no replace
+hi_150k_plus already numeric; no replace
+file ./Analysis/data/ACS_2019.dta saved
+(encoding automatically selected: ISO-8859-1)
+(131 vars, 3,221 obs)
+(1 observation deleted)
+county_med_y: all characters numeric; replaced as long
+county: all characters numeric; replaced as long
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                            80
+        from master                        80  (_merge==1)
+        from using                          0  (_merge==2)
+
+    Matched                            44,176  (_merge==3)
+    -----------------------------------------
+(80 observations deleted)
+file ./Analysis/data/ZCTA_crosswalk_2010.dta saved
+(encoding automatically selected: ISO-8859-1)
+(459 vars, 3,221 obs)
+(1 observation deleted)
+county_pop: all characters numeric; replaced as long
+county: all characters numeric; replaced as long
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                            80
+        from master                        80  (_merge==1)
+        from using                          0  (_merge==2)
+
+    Matched                            44,176  (_merge==3)
+    -----------------------------------------
+(80 observations deleted)
+(32,972 real changes made)
+(11,204 observations deleted)
+zip already numeric; no replace
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                           148
+        from master                         0  (_merge==1)
+        from using                        148  (_merge==2)
+
+    Matched                            32,972  (_merge==3)
+    -----------------------------------------
+  0
+percent of unmatched crosswalk zip data: 0
+  148
+percent of unmatched ACS zip data: .4468599
+(148 observations deleted)
+file ./Analysis/data/ACS_2019.dta saved
+(encoding automatically selected: ISO-8859-1)
+(38 vars, 33,120 obs)
+hs_incomp_25_plus already numeric; no replace
+hs_grad_25_plus already numeric; no replace
+bach_grad_25_plus already numeric; no replace
+perc_bach_grad_and_above: contains nonnumeric characters; replaced as double
+(407 missing values generated)
+zip already numeric; no replace
+total_pop already numeric; no replace
+eighteen_plus already numeric; no replace
+sixty_five_plus already numeric; no replace
+nonhisp_white_perc: contains nonnumeric characters; replaced as double
+(371 missing values generated)
+hisp_perc: contains nonnumeric characters; replaced as double
+(371 missing values generated)
+nonhisp_black_perc: contains nonnumeric characters; replaced as double
+(371 missing values generated)
+two_plus_races_perc: contains nonnumeric characters; replaced as double
+(371 missing values generated)
+nonhisp_asian_perc: contains nonnumeric characters; replaced as double
+(371 missing values generated)
+civ_emp_16_plus already numeric; no replace
+civ_unemp_16_plus already numeric; no replace
+med_h_y: contains nonnumeric characters; replaced as long
+(2603 missing values generated)
+perc_below_pov_line: contains nonnumeric characters; replaced as double
+(580 missing values generated)
+mean_com_time_min: contains nonnumeric characters; replaced as double
+(2670 missing values generated)
+priv_hi already numeric; no replace
+pub_hi already numeric; no replace
+uninsured already numeric; no replace
+hh_w_child_pov_perc: contains nonnumeric characters; replaced as double
+(1764 missing values generated)
+housing_units_occ already numeric; no replace
+homeowner_units_occ already numeric; no replace
+renters_units_occ already numeric; no replace
+med_rent: contains nonnumeric characters; replaced as int
+(6608 missing values generated)
+med_household_price: contains nonnumeric characters; replaced as long
+(2812 missing values generated)
+hi_05k already numeric; no replace
+hi_510k already numeric; no replace
+hi_1015k already numeric; no replace
+hi_1520k already numeric; no replace
+hi_2025k already numeric; no replace
+hi_2535k already numeric; no replace
+hi_3550k already numeric; no replace
+hi_5075k already numeric; no replace
+hi_75100k already numeric; no replace
+hi_100150k already numeric; no replace
+hi_150k_plus already numeric; no replace
+file ./Analysis/data/ACS_2020.dta saved
+(encoding automatically selected: ISO-8859-1)
+(131 vars, 3,222 obs)
+(1 observation deleted)
+county_med_y: contains nonnumeric characters; replaced as long
+(1 missing value generated)
+county: all characters numeric; replaced as long
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                            92
+        from master                        82  (_merge==1)
+        from using                         10  (_merge==2)
+
+    Matched                            44,166  (_merge==3)
+    -----------------------------------------
+(92 observations deleted)
+file ./Analysis/data/ZCTA_crosswalk_2010.dta saved
+(encoding automatically selected: ISO-8859-1)
+(459 vars, 3,222 obs)
+(1 observation deleted)
+county_pop: all characters numeric; replaced as long
+county: all characters numeric; replaced as long
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                            82
+        from master                        82  (_merge==1)
+        from using                          0  (_merge==2)
+
+    Matched                            44,166  (_merge==3)
+    -----------------------------------------
+(82 observations deleted)
+(32,966 real changes made)
+(11,200 observations deleted)
+zip already numeric; no replace
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                           154
+        from master                         0  (_merge==1)
+        from using                        154  (_merge==2)
+
+    Matched                            32,966  (_merge==3)
+    -----------------------------------------
+  0
+percent of unmatched crosswalk zip data: 0
+  154
+percent of unmatched ACS zip data: .46497585
+(154 observations deleted)
+file ./Analysis/data/ACS_2020.dta saved
+(encoding automatically selected: ISO-8859-1)
+(38 vars, 33,774 obs)
+hs_incomp_25_plus already numeric; no replace
+hs_grad_25_plus already numeric; no replace
+bach_grad_25_plus already numeric; no replace
+perc_bach_grad_and_above: contains nonnumeric characters; replaced as double
+(643 missing values generated)
+zip already numeric; no replace
+total_pop already numeric; no replace
+eighteen_plus already numeric; no replace
+sixty_five_plus already numeric; no replace
+nonhisp_white_perc: contains nonnumeric characters; replaced as double
+(590 missing values generated)
+hisp_perc: contains nonnumeric characters; replaced as double
+(590 missing values generated)
+nonhisp_black_perc: contains nonnumeric characters; replaced as double
+(590 missing values generated)
+two_plus_races_perc: contains nonnumeric characters; replaced as double
+(590 missing values generated)
+nonhisp_asian_perc: contains nonnumeric characters; replaced as double
+(590 missing values generated)
+civ_emp_16_plus already numeric; no replace
+civ_unemp_16_plus already numeric; no replace
+med_h_y: contains nonnumeric characters; replaced as long
+(3178 missing values generated)
+perc_below_pov_line: contains nonnumeric characters; replaced as double
+(902 missing values generated)
+mean_com_time_min: contains nonnumeric characters; replaced as double
+(3206 missing values generated)
+priv_hi already numeric; no replace
+pub_hi already numeric; no replace
+uninsured already numeric; no replace
+hh_w_child_pov_perc: contains nonnumeric characters; replaced as double
+(2319 missing values generated)
+housing_units_occ already numeric; no replace
+homeowner_units_occ already numeric; no replace
+renters_units_occ already numeric; no replace
+med_rent: contains nonnumeric characters; replaced as int
+(7480 missing values generated)
+med_household_price: contains nonnumeric characters; replaced as long
+(3430 missing values generated)
+hi_05k already numeric; no replace
+hi_510k already numeric; no replace
+hi_1015k already numeric; no replace
+hi_1520k already numeric; no replace
+hi_2025k already numeric; no replace
+hi_2535k already numeric; no replace
+hi_3550k already numeric; no replace
+hi_5075k already numeric; no replace
+hi_75100k already numeric; no replace
+hi_100150k already numeric; no replace
+hi_150k_plus already numeric; no replace
+file ./Analysis/data/ACS_2021.dta saved
+(encoding automatically selected: ISO-8859-1)
+(131 vars, 3,222 obs)
+(1 observation deleted)
+county_med_y: contains nonnumeric characters; replaced as long
+(1 missing value generated)
+county: all characters numeric; replaced as long
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                            78
+        from master                        78  (_merge==1)
+        from using                          0  (_merge==2)
+
+    Matched                            47,539  (_merge==3)
+    -----------------------------------------
+(78 observations deleted)
+file ./Analysis/data/ZCTA_crosswalk_2020.dta saved
+(encoding automatically selected: ISO-8859-1)
+(459 vars, 3,222 obs)
+(1 observation deleted)
+county_pop: all characters numeric; replaced as long
+county: all characters numeric; replaced as long
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                            78
+        from master                        78  (_merge==1)
+        from using                          0  (_merge==2)
+
+    Matched                            47,539  (_merge==3)
+    -----------------------------------------
+(78 observations deleted)
+(33,643 real changes made)
+(13,896 observations deleted)
+zip already numeric; no replace
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                           133
+        from master                         1  (_merge==1)
+        from using                        132  (_merge==2)
+
+    Matched                            33,642  (_merge==3)
+    -----------------------------------------
+  1
+percent of unmatched crosswalk zip data: .00296077
+  132
+percent of unmatched ACS zip data: .39082161
+(133 observations deleted)
+file ./Analysis/data/ACS_2021.dta saved
+(encoding automatically selected: ISO-8859-1)
+(38 vars, 33,774 obs)
+hs_incomp_25_plus already numeric; no replace
+hs_grad_25_plus already numeric; no replace
+bach_grad_25_plus already numeric; no replace
+perc_bach_grad_and_above: contains nonnumeric characters; replaced as double
+(645 missing values generated)
+zip already numeric; no replace
+total_pop already numeric; no replace
+eighteen_plus already numeric; no replace
+sixty_five_plus already numeric; no replace
+nonhisp_white_perc: contains nonnumeric characters; replaced as double
+(587 missing values generated)
+hisp_perc: contains nonnumeric characters; replaced as double
+(587 missing values generated)
+nonhisp_black_perc: contains nonnumeric characters; replaced as double
+(587 missing values generated)
+two_plus_races_perc: contains nonnumeric characters; replaced as double
+(587 missing values generated)
+nonhisp_asian_perc: contains nonnumeric characters; replaced as double
+(587 missing values generated)
+civ_emp_16_plus already numeric; no replace
+civ_unemp_16_plus already numeric; no replace
+med_h_y: contains nonnumeric characters; replaced as long
+(3244 missing values generated)
+perc_below_pov_line: contains nonnumeric characters; replaced as double
+(890 missing values generated)
+mean_com_time_min: contains nonnumeric characters; replaced as double
+(3259 missing values generated)
+priv_hi already numeric; no replace
+pub_hi already numeric; no replace
+uninsured already numeric; no replace
+hh_w_child_pov_perc: contains nonnumeric characters; replaced as double
+(2362 missing values generated)
+housing_units_occ already numeric; no replace
+homeowner_units_occ already numeric; no replace
+renters_units_occ already numeric; no replace
+med_rent: contains nonnumeric characters; replaced as int
+(7712 missing values generated)
+med_household_price: contains nonnumeric characters; replaced as long
+(3492 missing values generated)
+hi_05k already numeric; no replace
+hi_510k already numeric; no replace
+hi_1015k already numeric; no replace
+hi_1520k already numeric; no replace
+hi_2025k already numeric; no replace
+hi_2535k already numeric; no replace
+hi_3550k already numeric; no replace
+hi_5075k already numeric; no replace
+hi_75100k already numeric; no replace
+hi_100150k already numeric; no replace
+hi_150k_plus already numeric; no replace
+file ./Analysis/data/ACS_2022.dta saved
+(encoding automatically selected: ISO-8859-1)
+(131 vars, 3,223 obs)
+(1 observation deleted)
+county_med_y: contains nonnumeric characters; replaced as long
+(1 missing value generated)
+county: all characters numeric; replaced as long
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                            78
+        from master                        78  (_merge==1)
+        from using                          0  (_merge==2)
+
+    Matched                            47,658  (_merge==3)
+    -----------------------------------------
+(78 observations deleted)
+file ./Analysis/data/ZCTA_crosswalk_2022.dta saved
+(encoding automatically selected: ISO-8859-1)
+(459 vars, 3,223 obs)
+(1 observation deleted)
+county_pop: all characters numeric; replaced as long
+county: all characters numeric; replaced as long
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                            78
+        from master                        78  (_merge==1)
+        from using                          0  (_merge==2)
+
+    Matched                            47,658  (_merge==3)
+    -----------------------------------------
+(78 observations deleted)
+(33,643 real changes made)
+(14,015 observations deleted)
+zip already numeric; no replace
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                           133
+        from master                         1  (_merge==1)
+        from using                        132  (_merge==2)
+
+    Matched                            33,642  (_merge==3)
+    -----------------------------------------
+  1
+percent of unmatched crosswalk zip data: .00296077
+  132
+percent of unmatched ACS zip data: .39082161
+(133 observations deleted)
+file ./Analysis/data/ACS_2022.dta saved
+(encoding automatically selected: ISO-8859-1)
+(38 vars, 33,772 obs)
+hs_incomp_25_plus already numeric; no replace
+hs_grad_25_plus already numeric; no replace
+bach_grad_25_plus already numeric; no replace
+perc_bach_grad_and_above: contains nonnumeric characters; replaced as double
+(660 missing values generated)
+zip already numeric; no replace
+total_pop already numeric; no replace
+eighteen_plus already numeric; no replace
+sixty_five_plus already numeric; no replace
+nonhisp_white_perc: contains nonnumeric characters; replaced as double
+(591 missing values generated)
+hisp_perc: contains nonnumeric characters; replaced as double
+(591 missing values generated)
+nonhisp_black_perc: contains nonnumeric characters; replaced as double
+(591 missing values generated)
+two_plus_races_perc: contains nonnumeric characters; replaced as double
+(591 missing values generated)
+nonhisp_asian_perc: contains nonnumeric characters; replaced as double
+(591 missing values generated)
+civ_emp_16_plus already numeric; no replace
+civ_unemp_16_plus already numeric; no replace
+med_h_y: contains nonnumeric characters; replaced as long
+(3263 missing values generated)
+perc_below_pov_line: contains nonnumeric characters; replaced as double
+(881 missing values generated)
+mean_com_time_min: contains nonnumeric characters; replaced as double
+(3336 missing values generated)
+priv_hi already numeric; no replace
+pub_hi already numeric; no replace
+uninsured already numeric; no replace
+hh_w_child_pov_perc: contains nonnumeric characters; replaced as double
+(2422 missing values generated)
+housing_units_occ already numeric; no replace
+homeowner_units_occ already numeric; no replace
+renters_units_occ already numeric; no replace
+med_rent: contains nonnumeric characters; replaced as int
+(7962 missing values generated)
+med_household_price: contains nonnumeric characters; replaced as long
+(3564 missing values generated)
+hi_05k already numeric; no replace
+hi_510k already numeric; no replace
+hi_1015k already numeric; no replace
+hi_1520k already numeric; no replace
+hi_2025k already numeric; no replace
+hi_2535k already numeric; no replace
+hi_3550k already numeric; no replace
+hi_5075k already numeric; no replace
+hi_75100k already numeric; no replace
+hi_100150k already numeric; no replace
+hi_150k_plus already numeric; no replace
+file ./Analysis/data/ACS_2023.dta saved
+(encoding automatically selected: UTF-8)
+(131 vars, 3,223 obs)
+(1 observation deleted)
+county_med_y: contains nonnumeric characters; replaced as long
+(2 missing values generated)
+county: all characters numeric; replaced as long
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                            78
+        from master                        78  (_merge==1)
+        from using                          0  (_merge==2)
+
+    Matched                            47,658  (_merge==3)
+    -----------------------------------------
+(78 observations deleted)
+file ./Analysis/data/ZCTA_crosswalk_2022.dta saved
+(encoding automatically selected: UTF-8)
+(459 vars, 3,223 obs)
+(1 observation deleted)
+county_pop: all characters numeric; replaced as long
+county: all characters numeric; replaced as long
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                            78
+        from master                        78  (_merge==1)
+        from using                          0  (_merge==2)
+
+    Matched                            47,658  (_merge==3)
+    -----------------------------------------
+(78 observations deleted)
+(33,643 real changes made)
+(14,015 observations deleted)
+zip already numeric; no replace
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                           135
+        from master                         3  (_merge==1)
+        from using                        132  (_merge==2)
+
+    Matched                            33,640  (_merge==3)
+    -----------------------------------------
+  3
+percent of unmatched crosswalk zip data: .00888231
+  132
+percent of unmatched ACS zip data: .39082161
+(135 observations deleted)
+file ./Analysis/data/ACS_2023.dta saved
+
+. 
+. cd ./Analysis
+/Users/schmidt/Desktop/Research/Analysis
+
+. log close
+      name:  <unnamed>
+       log:  /Users/schmidt/Desktop/Research/Analysis/output/log_ACS_data_prep.log
+  log type:  text
+ closed on:  29 Apr 2025, 00:59:56
+-------------------------------------------------------------------------------------------

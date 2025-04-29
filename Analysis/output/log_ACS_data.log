@@ -1,0 +1,1075 @@
+----------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/schmidt/Kanter Lab Dropbox/Matteus Schmidt/Kanter Project ADRD Tech Disparities - Geo/Analysis/output/log_ACS_
+> data.log
+  log type:  text
+ opened on:  11 Mar 2025, 23:47:58
+
+. 
+. forvalues i = 2015/2023 {
+  2.         use "./data/ACS_`i'.dta", clear
+  3.         putexcel set "./output/ACS_summary_statistics.xlsx", modify sheet("ACS_`i'")
+  4.         putexcel A1 = "ACS_`i'"
+  5.         local place = 3
+  6.         foreach var of varlist _all {
+  7.                 if "`var'" == "zip" {
+  8.                         continue
+  9.                 }
+ 10.                 summarize `var'
+ 11.                 scalar me = r(mean)
+ 12.                 scalar std_dev = r(sd)
+ 13.                 scalar min = r(min)
+ 14.                 scalar max = r(max)
+ 15.                 scalar missing = _N - r(N)
+ 16.                 
+.                 putexcel A2 = "Variable" B2 = "Mean" C2 = "Median" C2 = "Standard Deviation" D2 = "Minimum" E2 = "Maximum" F2 = 
+> "Missing Values"
+ 17.                 putexcel A`place' = "`var'" B`place' = me C`place' = std_dev D`place' = min E`place' = max F`place' = missing
+ 18.                 local place = `place' + 1
+ 19.         }
+ 20.         
+. }
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+hs_incomp_~s |     33,120     494.053    872.1768          0      15362
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+hs_grad_25~s |     33,120    1792.698    2520.965          0      25621
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+bach_grad_~s |     33,120    1195.229    2128.361          0      24629
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+perc_bach_~e |     32,779    22.81518    16.32497          0        100
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   total_pop |     33,120    9664.375    14237.95          0     114982
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  non_hisp_w |     33,120    5956.445    8414.789          0      75412
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+        hisp |     33,120    1744.371    5790.891          0     103342
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  black_only |     33,120    1214.007    3842.507          0      84567
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+two_plus_r~s |     33,120    295.2729     693.762          0      24012
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+civ_emp_16~s |     33,120    4432.619    6702.906          0      54239
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+civ_unemp_~s |     33,120     404.154    702.6965          0       9735
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     med_h_y |     31,050    53373.79    22286.61       3479     236500
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    pov_rate |     32,601    15.46007     12.1307          0        100
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+mean_com_t~n |     30,868     25.8655    7.447405        1.2      117.7
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     priv_hi |     33,120    6261.909    9308.377          0      81739
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+      pub_hi |     33,120    3080.573    4870.917          0      64248
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   uninsured |     33,120    1228.323     2383.46          0      36480
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+pop_under_18 |     33,120    2248.978    3565.863          0      43625
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+pop_25_to_65 |     33,120    8299.302    12516.59          0     106134
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+hs_incomp_~s |     33,120     486.886    862.6657          0      16376
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+hs_grad_25~s |     33,120    1795.763    2534.385          0      26231
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+bach_grad_~s |     33,120    1226.267    2184.777          0      25371
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+perc_bach_~e |     32,765    23.23304     16.4721          0        100
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   total_pop |     33,120    9724.409    14358.66          0     115104
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  non_hisp_w |     33,120    5959.632    8442.895          0      76997
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+        hisp |     33,120    1771.909    5838.064          0     100086
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  black_only |     33,120    1224.629    3866.855          0      87209
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+two_plus_r~s |     33,120    302.4532    694.4056          0      20273
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+civ_emp_16~s |     33,120    4500.408    6831.481          0      55736
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+civ_unemp_~s |     33,120    363.3009    635.2929          0       9698
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     med_h_y |     31,096    54630.37    22812.24       3333     244527
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    pov_rate |     32,592    15.17222    11.94398          0        100
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+mean_com_t~n |     30,856    25.96768    7.452143        1.1      127.9
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     priv_hi |     33,120    6352.271     9475.53          0      89616
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+      pub_hi |     33,120    3192.257    5047.781          0      64887
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   uninsured |     33,120    1114.785    2181.784          0      33291
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+pop_under_18 |     33,120      2245.7    3571.286          0      45176
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+pop_25_to_65 |     33,120    8311.539    12574.61          0     106714
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+hs_incomp_~s |     33,120    479.8346    855.3999          0      16093
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+hs_grad_25~s |     33,120    1804.062    2562.183          0      28207
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+bach_grad_~s |     33,120    1262.151    2249.164          0      25738
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+perc_bach_~e |     32,762    23.69388    16.66453          0        100
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   total_pop |     33,120    9796.435    14510.55          0     119204
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  non_hisp_w |     33,120    5957.054    8458.828          0      79032
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+        hisp |     33,120    1809.701    5909.805          0      97912
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  black_only |     33,120    1236.346    3890.455          0      87124
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+two_plus_r~s |     33,120    310.7082    699.2443          0      18519
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+civ_emp_16~s |     33,120    4578.388    6979.868          0      59273
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+civ_unemp_~s |     33,120    325.5057    573.7257          0       9451
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     med_h_y |     30,938    56693.99    23851.65       4836     244671
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    pov_rate |     32,598     14.8218     11.9482          0        100
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+mean_com_t~n |     30,773    26.08902    7.503404          1      132.2
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     priv_hi |     33,120    6455.286    9664.882          0      96131
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+      pub_hi |     33,120    3292.162    5215.378          0      64045
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   uninsured |     33,120    1008.201     2003.02          0      32608
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+pop_under_18 |     33,120    2244.273    3579.807          0      46721
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+pop_25_to_65 |     33,120    8336.248    12659.85          0     112827
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+hs_incomp_~s |     33,120     471.893     842.565          0      14948
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+hs_grad_25~s |     33,120    1809.256    2579.403          0      29210
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+bach_grad_~s |     33,120    1295.234    2308.196          0      25518
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+perc_bach_~e |     32,763    24.08548    16.78261          0        100
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   total_pop |     33,120    9851.279    14614.86          0     122814
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  non_hisp_w |     33,120    5954.189    8477.353          0      81802
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+        hisp |     33,120    1837.599    5937.404          0      99654
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  black_only |     33,120    1246.345    3897.455          0      86679
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+two_plus_r~s |     33,120    320.3719    707.3209          0      19986
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+civ_emp_16~s |     33,085    4647.047    7103.237          0      63046
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+civ_unemp_~s |     33,085    293.6792     518.523          0       9120
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     med_h_y |     30,872    58945.96    24886.14       6271     246813
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    pov_rate |     32,556    14.38837    11.65558          0        100
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+mean_com_t~n |     30,718    26.32271    7.512893          1       80.1
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     priv_hi |     33,120    6540.618    9830.162          0     103707
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+      pub_hi |     33,120    3389.577    5359.338          0      64615
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   uninsured |     33,120    904.6534    1827.011          0      32516
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+pop_under_18 |     33,120    2241.514    3583.393          0      48120
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+pop_25_to_65 |     33,120    8345.285    12702.83          0     115682
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+hs_incomp_~s |     33,120    464.3258    831.0034          0      14243
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+hs_grad_25~s |     33,120    1815.389    2599.145          0      31970
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+bach_grad_~s |     33,120    1330.854    2369.935          0      26292
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+perc_bach_~e |     32,737    24.53582    16.93392          0        100
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   total_pop |     33,120    9903.344    14714.04          0     128294
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  non_hisp_w |     33,120     5951.82    8491.046          0      85086
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+        hisp |     33,120    1864.414    5961.995          0     101183
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  black_only |     33,120     1256.61    3907.782          0      86706
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+two_plus_r~s |     33,120    330.2739    719.2891          0      20496
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+civ_emp_16~s |     33,120    4706.106     7217.62          0      64673
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+civ_unemp_~s |     33,120    269.0281    476.3017          0       7905
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     med_h_y |     30,797    61227.82    25909.57       6493     248243
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    pov_rate |     32,566    13.95113    11.55896          0        100
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+mean_com_t~n |     30,681    26.60356    7.705281          1       92.1
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     priv_hi |     33,120    6595.906    9949.249          0     104315
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+      pub_hi |     33,120    3449.961    5437.266          0      67116
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   uninsured |     33,120    859.4227    1760.106          0      31374
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+pop_under_18 |     33,120    2236.558    3582.614          0      49536
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+pop_25_to_65 |     33,120    8350.303    12739.13          0     120076
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+hs_incomp_~s |     33,120    447.5403    807.9267          0      12441
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+hs_grad_25~s |     33,120    1813.772    2603.186          0      32199
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+bach_grad_~s |     33,120    1373.062    2435.561          0      28108
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+perc_bach_~e |     32,713    25.23946     17.3369          0        100
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   total_pop |     33,120    9957.821    14805.92          0     126310
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  non_hisp_w |     33,120    5926.087    8466.545          0      88510
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+        hisp |     33,120    1889.122    5961.144          0     101144
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  black_only |     33,120    1255.804    3889.892          0      84752
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+two_plus_r~s |     33,120    518.9976    1110.634          0      21192
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+civ_emp_16~s |     33,120    4737.594    7268.922          0      62748
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+civ_unemp_~s |     33,120    273.3191    483.9473          0       6800
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     med_h_y |     30,517    63330.41    26725.24       7428     248091
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    pov_rate |     32,540    13.44733    11.55332          0        100
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+mean_com_t~n |     30,450    26.67883    7.912084        1.3      110.1
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     priv_hi |     33,120    6644.837    10049.81          0     110924
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+      pub_hi |     33,120    3483.927    5459.647          0      67321
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   uninsured |     33,120    853.8093    1747.118          0      30648
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+pop_under_18 |     33,120    2231.398    3582.146          0      51402
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+pop_25_to_65 |     33,120    8356.708     12766.3          0     116285
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+hs_incomp_~s |     33,774    427.4993    784.7235          0      11335
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+hs_grad_25~s |     33,774    1785.639    2608.012          0      32956
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+bach_grad_~s |     33,774    1386.387    2476.353          0      29701
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+perc_bach_~e |     33,131     25.7017     17.7434          0        100
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   total_pop |     33,774     9860.63    14844.77          0     130352
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  non_hisp_w |     33,774    5804.371    8405.635          0     111846
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+        hisp |     33,774    1897.214    5966.055          0     100502
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  black_only |     33,774    1235.341    3866.457          0      85092
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+two_plus_r~s |     33,774    698.7651    1565.189          0      25853
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+civ_emp_16~s |     33,774    4694.898    7290.387          0      61865
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+civ_unemp_~s |     33,774    276.5925    498.3256          0       6827
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     med_h_y |     30,596     67014.1    28169.05       5746     249375
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    pov_rate |     32,872    13.37514    11.81315          0        100
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+mean_com_t~n |     30,568    26.64566    7.930329        1.5        133
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     priv_hi |     33,774    6558.088    10057.26          0     110597
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+      pub_hi |     33,774    3466.419    5503.679          0      82146
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   uninsured |     33,774    850.1447    1754.165          0      32201
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+pop_under_18 |     33,774    2215.631    3602.327          0      64469
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+pop_25_to_65 |     33,774    8273.846    12786.13          0     118241
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+hs_incomp_~s |     33,774    415.4455    763.6769          0      10793
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+hs_grad_25~s |     33,774     1788.75    2614.587          0      34228
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+bach_grad_~s |     33,774    1417.463    2524.338          0      30880
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+perc_bach_~e |     33,129     26.2531    17.88914          0        100
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   total_pop |     33,774    9900.097    14908.09          0     134008
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  non_hisp_w |     33,774    5771.051    8366.925          0     114513
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+        hisp |     33,774    1924.154    5973.544          0      97669
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  black_only |     33,774    1230.967    3829.394          0      81608
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+two_plus_r~s |     33,774      885.44     2053.07          0      38031
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+civ_emp_16~s |     33,774    4737.169    7357.809          0      63368
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+civ_unemp_~s |     33,774    269.7196    488.1959          0       7114
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     med_h_y |     30,530    72775.68     30183.9       4016     247656
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    pov_rate |     32,884    13.36165     11.9478          0        100
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+mean_com_t~n |     30,515    26.67392    7.858199        1.3      137.7
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     priv_hi |     33,774    6564.739    10084.94          0     111959
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+      pub_hi |     33,774    3522.852    5565.345          0      83946
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   uninsured |     33,774    844.5397        1754          0      34530
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+pop_under_18 |     33,774    2184.495     3551.04          0      66233
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+pop_25_to_65 |     33,774    8258.003    12773.42          0     120305
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+hs_incomp_~s |     33,772    404.5946    745.3831          0      10320
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+hs_grad_25~s |     33,772    1791.106    2620.487          0      33608
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+bach_grad_~s |     33,772    1453.428    2579.272          0      32813
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+perc_bach_~e |     33,112    26.92049     18.0967          0        100
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   total_pop |     33,772    9935.909    14963.67          0     137213
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  non_hisp_w |     33,772    5725.246    8305.213          0     114917
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+        hisp |     33,772    1962.946    5948.598          0      94292
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  black_only |     33,772    1222.606    3777.086          0      76552
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+two_plus_r~s |     33,772    1082.439    2568.603          0      50514
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+civ_emp_16~s |     33,772    4763.663    7403.175          0      66170
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+civ_unemp_~s |     33,772    263.8328    479.2328          0       5492
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     med_h_y |     30,509    75874.51    31022.62       6229     249688
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    pov_rate |     32,891    13.34733    12.11289          0        100
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+mean_com_t~n |     30,436    26.72043    7.875398        2.5      137.2
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+     priv_hi |     33,772    6562.635    10103.18          0     115521
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+      pub_hi |     33,772    3578.351    5630.217          0      88759
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   uninsured |     33,772     834.784    1740.399          0      33847
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+pop_under_18 |     33,772    2196.164     3567.67          0      67950
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+pop_25_to_65 |     33,772    8257.003    12774.93          0     124887
+file ./output/ACS_summary_statistics.xlsx saved
+file ./output/ACS_summary_statistics.xlsx saved
+
+. 
+. log close
+      name:  <unnamed>
+       log:  /Users/schmidt/Kanter Lab Dropbox/Matteus Schmidt/Kanter Project ADRD Tech Disparities - Geo/Analysis/output/log_ACS_
+> data.log
+  log type:  text
+ closed on:  11 Mar 2025, 23:48:00
+----------------------------------------------------------------------------------------------------------------------------------

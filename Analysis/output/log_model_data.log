@@ -1,0 +1,225 @@
+-----------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/schmidt/Desktop/Research/Analysis/output/log_model_data.log
+  log type:  text
+ opened on:  29 Apr 2025, 01:48:42
+
+. 
+. use ./data/model_data, clear
+
+. 
+. xtset zip year
+
+Panel variable: zip (unbalanced)
+ Time variable: year, 2019 to 2023, but with gaps
+         Delta: 1 unit
+
+. bysort zip (year): gen med_rent_future = F1.med_rent
+(21,736 missing values generated)
+
+. 
+. gen gentrification_score = 1*slope_inc + 0.75*curvature_inc + 1.25*slope_rent_med + 1*curvatu
+> re_rent_med + -1*slope_poverty + -0.75*curvature_poverty + -1*slope_homeownership + -0.75*cur
+> vature_homeownership + 1*slope_bach_grad + 0.75*curvature_bach_grad + 1*displacement
+(22,035 missing values generated)
+
+. 
+. gen ln_med_rent_future = log(med_rent_future)
+(21,736 missing values generated)
+
+. gen ln_med_rent = log(med_rent)
+(3,627 missing values generated)
+
+. 
+. save ./data/model, replace
+file ./data/model.dta saved
+
+. 
+. drop if year > 2021
+(32,341 observations deleted)
+
+. 
+. lasso linear ln_med_rent_future gentrification_score ln_med_rent hs_incomp_25_plus nonhisp_wh
+> ite_perc hisp_perc nonhisp_black_perc perc_below_pov_line med_h_y mean_com_time_min hh_w_chil
+> d_pov_perc pct_homeownership 
+
+10-fold cross-validation with 100 lambdas ...
+Grid value 1:     lambda = .3534569   no. of nonzero coef. =  0
+Folds: 1...5....10   CVF = .1339779
+Grid value 2:     lambda = .3220567   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .1129053
+Grid value 3:     lambda = .2934461   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0952941
+Grid value 4:     lambda = .2673772   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF =  .080673
+Grid value 5:     lambda = .2436241   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0685343
+Grid value 6:     lambda = .2219812   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0584565
+Grid value 7:     lambda =  .202261   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0500898
+Grid value 8:     lambda = .1842927   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0431435
+Grid value 9:     lambda = .1679206   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0373766
+Grid value 10:    lambda =  .153003   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0325889
+Grid value 11:    lambda = .1394107   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF =  .028614
+Grid value 12:    lambda = .1270258   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0253139
+Grid value 13:    lambda = .1157412   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0225742
+Grid value 14:    lambda = .1054591   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0202996
+Grid value 15:    lambda = .0960904   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0184112
+Grid value 16:    lambda =  .087554   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0168434
+Grid value 17:    lambda = .0797759   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0155418
+Grid value 18:    lambda = .0726888   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0144612
+Grid value 19:    lambda = .0662314   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0135641
+Grid value 20:    lambda = .0603476   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0128192
+Grid value 21:    lambda = .0549864   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0122009
+Grid value 22:    lambda = .0501016   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0116875
+Grid value 23:    lambda = .0456507   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0112613
+Grid value 24:    lambda = .0415952   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0109074
+Grid value 25:    lambda =    .0379   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0106136
+Grid value 26:    lambda = .0345331   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0103697
+Grid value 27:    lambda = .0314653   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0101673
+Grid value 28:    lambda =   .02867   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0099991
+Grid value 29:    lambda =  .026123   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0098596
+Grid value 30:    lambda = .0238023   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0097437
+Grid value 31:    lambda = .0216878   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0096475
+Grid value 32:    lambda = .0197611   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0095676
+Grid value 33:    lambda = .0180056   no. of nonzero coef. =  1
+Folds: 1...5....10   CVF = .0095012
+Grid value 34:    lambda =  .016406   no. of nonzero coef. =  2
+Folds: 1...5....10   CVF = .0094384
+Grid value 35:    lambda = .0149485   no. of nonzero coef. =  2
+Folds: 1...5....10   CVF = .0093841
+Grid value 36:    lambda = .0136206   no. of nonzero coef. =  2
+Folds: 1...5....10   CVF =  .009339
+Grid value 37:    lambda = .0124105   no. of nonzero coef. =  2
+Folds: 1...5....10   CVF = .0093016
+Grid value 38:    lambda =  .011308   no. of nonzero coef. =  2
+Folds: 1...5....10   CVF = .0092705
+Grid value 39:    lambda = .0103035   no. of nonzero coef. =  2
+Folds: 1...5....10   CVF = .0092447
+Grid value 40:    lambda = .0093881   no. of nonzero coef. =  2
+Folds: 1...5....10   CVF = .0092233
+Grid value 41:    lambda = .0085541   no. of nonzero coef. =  3
+Folds: 1...5....10   CVF = .0092039
+Grid value 42:    lambda = .0077942   no. of nonzero coef. =  3
+Folds: 1...5....10   CVF = .0091726
+Grid value 43:    lambda = .0071018   no. of nonzero coef. =  3
+Folds: 1...5....10   CVF = .0091462
+Grid value 44:    lambda = .0064709   no. of nonzero coef. =  3
+Folds: 1...5....10   CVF = .0091244
+Grid value 45:    lambda =  .005896   no. of nonzero coef. =  4
+Folds: 1...5....10   CVF = .0091049
+Grid value 46:    lambda = .0053722   no. of nonzero coef. =  4
+Folds: 1...5....10   CVF = .0090842
+Grid value 47:    lambda =  .004895   no. of nonzero coef. =  5
+Folds: 1...5....10   CVF = .0090659
+Grid value 48:    lambda = .0044601   no. of nonzero coef. =  5
+Folds: 1...5....10   CVF = .0090499
+Grid value 49:    lambda = .0040639   no. of nonzero coef. =  5
+Folds: 1...5....10   CVF = .0090366
+Grid value 50:    lambda = .0037029   no. of nonzero coef. =  6
+Folds: 1...5....10   CVF = .0090248
+Grid value 51:    lambda = .0033739   no. of nonzero coef. =  6
+Folds: 1...5....10   CVF = .0090146
+Grid value 52:    lambda = .0030742   no. of nonzero coef. =  6
+Folds: 1...5....10   CVF = .0090062
+Grid value 53:    lambda = .0028011   no. of nonzero coef. =  6
+Folds: 1...5....10   CVF = .0089992
+Grid value 54:    lambda = .0025522   no. of nonzero coef. =  6
+Folds: 1...5....10   CVF = .0089934
+Grid value 55:    lambda = .0023255   no. of nonzero coef. =  7
+Folds: 1...5....10   CVF = .0089881
+Grid value 56:    lambda = .0021189   no. of nonzero coef. =  7
+Folds: 1...5....10   CVF = .0089831
+Grid value 57:    lambda = .0019307   no. of nonzero coef. =  8
+Folds: 1...5....10   CVF = .0089786
+Grid value 58:    lambda = .0017592   no. of nonzero coef. =  8
+Folds: 1...5....10   CVF = .0089748
+Grid value 59:    lambda = .0016029   no. of nonzero coef. =  8
+Folds: 1...5....10   CVF = .0089716
+Grid value 60:    lambda = .0014605   no. of nonzero coef. =  8
+Folds: 1...5....10   CVF = .0089686
+Grid value 61:    lambda = .0013307   no. of nonzero coef. =  8
+Folds: 1...5....10   CVF = .0089662
+Grid value 62:    lambda = .0012125   no. of nonzero coef. =  8
+Folds: 1...5....10   CVF = .0089641
+Grid value 63:    lambda = .0011048   no. of nonzero coef. =  8
+Folds: 1...5....10   CVF = .0089625
+Grid value 64:    lambda = .0010067   no. of nonzero coef. =  8
+Folds: 1...5....10   CVF = .0089611
+Grid value 65:    lambda = .0009172   no. of nonzero coef. =  8
+Folds: 1...5....10   CVF =   .00896
+... change in deviance stopping tolerance reached ... last lambda selected
+Minimum of CV function not found; lambda selected based on stop() stopping criterion.
+
+Lasso linear model                          No. of obs        =     43,202
+                                            No. of covariates =         11
+Selection: Cross-validation                 No. of CV folds   =         10
+
+--------------------------------------------------------------------------
+         |                                No. of      Out-of-      CV mean
+         |                               nonzero       sample   prediction
+      ID |     Description      lambda     coef.    R-squared        error
+---------+----------------------------------------------------------------
+       1 |    first lambda    .3534569         0       0.0010     .1339779
+      64 |   lambda before    .0010067         8       0.9332     .0089611
+    * 65 | selected lambda    .0009172         8       0.9332       .00896
+--------------------------------------------------------------------------
+* lambda selected by cross-validation.
+Note: Minimum of CV function not found; lambda selected based on stop()
+      stopping criterion.
+
+. 
+. lassocoef
+
+--------------------------------
+                     |  active  
+---------------------+----------
+gentrification_score |     x    
+         ln_med_rent |     x    
+   hs_incomp_25_plus |     x    
+  nonhisp_white_perc |     x    
+           hisp_perc |     x    
+             med_h_y |     x    
+ hh_w_child_pov_perc |     x    
+   pct_homeownership |     x    
+               _cons |     x    
+--------------------------------
+Legend:
+  b - base level
+  e - empty cell
+  o - omitted
+  x - estimated
+
+. 
+. log close
+      name:  <unnamed>
+       log:  /Users/schmidt/Desktop/Research/Analysis/output/log_model_data.log
+  log type:  text
+ closed on:  29 Apr 2025, 01:48:43
+-----------------------------------------------------------------------------------------------

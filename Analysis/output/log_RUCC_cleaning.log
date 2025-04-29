@@ -1,0 +1,35 @@
+-------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/schmidt/Desktop/Research/Analysis/output/log_RUCC_cleaning.log
+  log type:  text
+ opened on:  29 Apr 2025, 00:59:56
+
+. 
+. import excel ./raw/RUCC/RUCC_2013.xls, sheet("RUCC 2013") firstrow clear
+(6 vars, 3,240 obs)
+
+. drop State County_Name
+
+. save ./Analysis/data/RUCC_2013, replace
+file ./Analysis/data/RUCC_2013.dta saved
+
+. 
+. import excel ./raw/RUCC/RUCC_2023.xlsx, sheet("RUCC 2023") firstrow clear
+(6 vars, 3,235 obs)
+
+. drop State County_Name
+
+. save ./Analysis/data/RUCC_2023, replace
+file ./Analysis/data/RUCC_2023.dta saved
+
+. 
+. cd ./Analysis
+/Users/schmidt/Desktop/Research/Analysis
+
+. 
+. log close
+      name:  <unnamed>
+       log:  /Users/schmidt/Desktop/Research/Analysis/output/log_RUCC_cleaning.log
+  log type:  text
+ closed on:  29 Apr 2025, 00:59:56
+-------------------------------------------------------------------------------------------
