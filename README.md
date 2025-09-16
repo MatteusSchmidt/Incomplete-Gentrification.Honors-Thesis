@@ -1,6 +1,8 @@
 # Incomplete-Gentrification.Honors-Thesis
 My Honors Thesis, covering the synthesis of a variable for incomplete gentrification, which quantifies racial displacement for inference
 
+Paper contained within $root/Analysis/output/
+
 ## Directions
 Run ACS_compilation.py with the proper ACS data added
 
