@@ -11,3 +11,5 @@ Run stata _all.do until udp_recreatioin
 Run displacement_metric.ipynb
 
 Run remaining do files in _all.do
+
+This will run all files end to end and generate the models / data
