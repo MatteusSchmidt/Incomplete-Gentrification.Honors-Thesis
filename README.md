@@ -1,5 +1,5 @@
 # Incomplete-Gentrification.Honors-Thesis
-My Honors Thesis, covering the synthesis of a variable for incomplete gentrification, which quantifies racial displacement for inference
+My Honors Thesis, covering the synthesis of a variable for incomplete gentrification, which quantifies racial displacement
 
 Paper contained within $root/Analysis/output/Honors-Thesis.pdf
 
